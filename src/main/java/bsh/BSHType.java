@@ -53,10 +53,6 @@ public class BSHType extends SimpleNode implements BshClassManager.Listener {
 
     String descriptor;
 
-    public BSHType(int id) {
-        super(id);
-    }
-
     /**
         Used by the grammar to indicate dimensions of array types
         during parsing.
