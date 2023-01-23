@@ -40,8 +40,8 @@ public class NameCompletionTable extends ArrayList
     implements NameCompletion
 {
     /** Unimplemented - need a collection here */
-    NameCompletionTable table;
-    List sources;
+    private NameCompletionTable table;
+    private List<NameSource> sources;
 
     /** Unimplemented - need a collection of sources here*/
 
@@ -72,7 +72,7 @@ public class NameCompletionTable extends ArrayList
             monitors it by registering a listener
         */
         if ( sources == null )
-            sources = new ArrayList();
+            sources = new ArrayList<>();
 
         sources.add( source );
     }
@@ -80,7 +80,7 @@ public class NameCompletionTable extends ArrayList
     /**
         Add any matching names to list (including any from other tables)
     */
-    protected void getMatchingNames( String part, List found )
+    protected void getMatchingNames( String part, List<String> found )
     {
         // check our table
         for( int i=0; i< size(); i++ ) {
@@ -96,31 +96,31 @@ public class NameCompletionTable extends ArrayList
 
         // Check other sources
         // note should add caching in source adapters
-        if ( sources != null )
-            for( int i=0; i< sources.size(); i++ )
+        if ( sources != null ) {
+            for( NameSource src : sources) 
             {
-                NameSource src = (NameSource)sources.get(i);
                 String [] names = src.getAllNames();
                 for( int j=0; j< names.length; j++ )
                     if ( names[j].startsWith( part ) )
                         found.add( names[j] );
 
             }
+        }
     }
 
     public String [] completeName( String part )
     {
-        List found = new ArrayList();
+        List<String> found = new ArrayList<>();
         getMatchingNames( part, found );
 
         if ( found.size() == 0 )
             return new String [0];
 
         // Find the max common prefix
-        String maxCommon = (String)found.get(0);
+        String maxCommon = found.get(0);
         for(int i=1; i<found.size() && maxCommon.length() > 0; i++) {
             maxCommon = StringUtil.maxCommonPrefix(
-                maxCommon, (String)found.get(i) );
+                maxCommon, found.get(i) );
 
             // if maxCommon gets as small as part, stop trying
             if ( maxCommon.equals( part ) )
@@ -131,7 +131,7 @@ public class NameCompletionTable extends ArrayList
         if ( maxCommon.length() > part.length() )
             return new String [] { maxCommon };
         else
-            return (String[])(found.toArray(new String[0]));
+            return found.toArray(new String[0]);
     }
 
     /**
