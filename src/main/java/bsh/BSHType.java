@@ -53,7 +53,6 @@ public class BSHType extends BaseNode implements BshClassManager.Listener {
 
     /** Flag to track if instance is already a listener */
     private boolean isListener = false;
-
     String descriptor;
 
     /**
